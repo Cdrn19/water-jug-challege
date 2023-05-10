@@ -5,7 +5,8 @@ import "../styles/Solution.css";
 
 const Solution = () => {
   const { solutions ,error }= useChallenge();
-  
+  const data = solutions[1];
+
   return (
     <div className="solution__container">
       <div className="solution__error">
@@ -22,8 +23,8 @@ const Solution = () => {
           <h5>Explanation</h5>
         </div>
       </div>
-      {solutions?.map((solution, i) => {
-        return <ExplanationCard solution={solution} key={i} />
+      {solutions[0]?.map((solution, i) => {
+        return <ExplanationCard solution={solution} data={data} key={i} />
       })}
     </div>
   ); 
