@@ -25,18 +25,29 @@ function useProvideChallenge() {
     const lowerCapacity = Math.min(x, y);
     const greaterCapacity = Math.max(x, y);
 
+    const mcd = (x, y) => {
+
+      let value; 
+      while (y !== 0) {
+          value = y;
+          y = x % y;
+          x = value;
+      }
+      return x;
+    };
+  
     function fillBucket (){
       let fill = {}
-
+  
       function big(min) {
         let qty = min || greaterCapacity
-
+  
           fill["fill"] = buckets.bigBucket = qty;
           fill["bucket"] = "bigBucket";
           fill["big"] = buckets.bigBucket;
           fill["small"] = buckets.smallBucket;
         };
-
+  
       function small(min) {
         let qty = min || lowerCapacity
         
@@ -45,31 +56,31 @@ function useProvideChallenge() {
         fill["big"] = buckets.bigBucket;
         fill["small"] = buckets.smallBucket;
       }
-
+  
       operation.push(fill);
       return {
         big,
         small,
       }      
     };
-
+  
     function emptyBucket() {     
       let empty = {}
-
+  
       function big() {
           empty["empty"] = buckets.bigBucket = 0;
           empty["bucket"] = "bigBucket";
           empty["big"] = buckets.bigBucket;
           empty["small"] = buckets.smallBucket;
         };
-
+  
       function small() {
         empty["empty"] = buckets.smallBucket = 0;
         empty["bucket"] = "smallBucket";
         empty["big"] = buckets.bigBucket;
         empty["small"] = buckets.smallBucket;
       }
-
+  
       operation.push(empty);
 
       return {
@@ -77,13 +88,13 @@ function useProvideChallenge() {
         small,
       }   
     };
-
+  
     function transferBucket(){
       let transfer = {}; 
-
+  
       function bigToSmall() {
         let capacity = 0;
-
+  
         if (buckets.bigBucket > lowerCapacity && !buckets.smallBucket) {
           capacity = lowerCapacity;
           buckets.smallBucket = capacity
@@ -94,17 +105,17 @@ function useProvideChallenge() {
           capacity = buckets.bigBucket - buckets.smallBucket;
           buckets.smallBucket = buckets.smallBucket + capacity
         }
-
+  
         transfer["transfer"] = capacity;
         buckets.bigBucket = buckets.bigBucket - capacity;
         transfer["bucket"] = "bigToSmall";
         transfer["big"] = buckets.bigBucket;
         transfer["small"] = buckets.smallBucket;
       }
-
+  
       function smallToBig() {
         let capacity = 0;
-
+  
         if (buckets.smallBucket > greaterCapacity && !buckets.bigBucket) {
           capacity = lowerCapacity;
           buckets.bigBucket = capacity;
@@ -115,27 +126,27 @@ function useProvideChallenge() {
           capacity = buckets.smallBucket;
           buckets.bigBucket = buckets.bigBucket + capacity
         } 
-
+  
         transfer["transfer"] = capacity;
         buckets.smallBucket = buckets.smallBucket - capacity;
         transfer["bucket"] = "smallToBig";
         transfer["big"] = buckets.bigBucket;
         transfer["small"] = buckets.smallBucket;
       }
-
+  
       operation.push(transfer);
-
+  
       return {
         bigToSmall,
         smallToBig,
-      }
+       }
 
 
 
 
     }
-
-
+  
+  
     function from() {
     
       function bigToSmall(){
@@ -152,7 +163,7 @@ function useProvideChallenge() {
       }
     
       function smallToBig() {
-
+  
         do {
           if (buckets.bigBucket === amountWasted || buckets.smallBucket === amountWasted) break;
           !buckets.smallBucket && fillBucket().small();
@@ -169,32 +180,32 @@ function useProvideChallenge() {
         smallToBig,
       }
     }
-
+  
   if((amountWasted <= greaterCapacity)){  
 
     if((greaterCapacity === amountWasted) || (lowerCapacity === amountWasted)){
-
+  
       if (lowerCapacity === amountWasted){ 
-
+  
         fillBucket().small()
-
-      } else {
-
+  
+    } else {
+  
         fillBucket().big()
-
+  
       }
-
-    } else {  
-
+  
+      } else {      
+  
       return setError("without solution in process...")
-
+  
     } 
-
-  } else {
-
+        
+        } else {
+  
     return setError("without solution")
-
-  }
+  
+    }
 
   setSolutions([operation, data]);
   
