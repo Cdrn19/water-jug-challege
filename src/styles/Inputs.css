@@ -31,7 +31,6 @@ input::-webkit-inner-spin-button {
 
 .inputs__form--input.error {
   border: 1px solid red;
-  
 }
 
 .inputs__form--btn {
@@ -43,8 +42,8 @@ input::-webkit-inner-spin-button {
   background-color: #b5b5b5;
   color: white;
   text-align: center;
-  font-size: 16px; 
-  font-weight: 800; 
+  font-size: 16px;
+  font-weight: 800;
   border-radius: 5px;
   margin: 20px auto;
   cursor: pointer;

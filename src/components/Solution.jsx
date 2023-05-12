@@ -4,8 +4,8 @@ import { useChallenge } from "../hook/useChallenge";
 import "../styles/Solution.css";
 
 const Solution = () => {
-  const { solutions ,error }= useChallenge();
-  const [ operation, data ] = solutions;
+  const { solutions, error } = useChallenge();
+  const [operation, data] = solutions;
 
   return (
     <div className="solution__container">
@@ -24,11 +24,18 @@ const Solution = () => {
         </div>
       </div>
       {operation?.map((solution, i) => {
-        let solved = i === operation.length - 1
-        return <ExplanationCard solution={solution} data={data} solved={solved} key={i} />
+        let solved = i === operation.length - 1;
+        return (
+          <ExplanationCard
+            solution={solution}
+            data={data}
+            solved={solved}
+            key={i}
+          />
+        );
       })}
     </div>
-  ); 
-}
+  );
+};
 
 export default Solution;

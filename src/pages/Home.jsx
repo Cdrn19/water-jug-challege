@@ -5,11 +5,11 @@ import { ProviderChallenge } from "../hook/useChallenge";
 
 const Home = () => {
   return (
-      <ProviderChallenge>
-        <Inputs />
-        <Solution />
-      </ProviderChallenge>
-  )
-}
+    <ProviderChallenge>
+      <Inputs />
+      <Solution />
+    </ProviderChallenge>
+  );
+};
 
-export default Home
+export default Home;

@@ -1,11 +1,11 @@
 import React from "react";
-import "../styles/ExplanationCard.css"
+import "../styles/ExplanationCard.css";
 
 const ExplanationCard = ({ solution, data, solved }) => {
   const { big, small } = solution;
-  const { x , y } = data
-  const bigBucket = parseInt(x) >= parseInt(y)
-  const [ operation ] = Object.keys(solution)
+  const { x, y } = data;
+  const bigBucket = parseInt(x) >= parseInt(y);
+  const [operation] = Object.keys(solution);
 
   return (
     <>
@@ -20,9 +20,9 @@ const ExplanationCard = ({ solution, data, solved }) => {
           <h5>{operation}</h5>
         </div>
       </div>
-      {solved && (<div className="explanationCard__solved">Solved</div>)}
+      {solved && <div className="explanationCard__solved">Solved</div>}
     </>
-  )
-}
+  );
+};
 
 export default ExplanationCard;

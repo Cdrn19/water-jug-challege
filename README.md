@@ -6,13 +6,13 @@ In the project directory, you can run:
 npm install
 ```
 
-installation of dependencies. 
+installation of dependencies.
 
 ```console
 npm run start
 ```
 
-Run the app in development mode. 
+Run the app in development mode.
 
 Open in browser [http://localhost:8080](http://localhost:8080) or [http://127.0.0.1:8080](http://127.0.0.1:8080). You can also enter assigned IP of your local network to be able to see the project on other devices.
 
@@ -20,7 +20,7 @@ Open in browser [http://localhost:8080](http://localhost:8080) or [http://127.0.
 npm run dev
 ```
 
-Build project using **development settings**. 
+Build project using **development settings**.
 
 ```console
 npm run build
