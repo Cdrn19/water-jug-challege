@@ -19,197 +19,214 @@ function useProvideChallenge() {
     const { x, y, z} = data;
 
     const amountWasted = parseInt(z)
-    let buckets = { bigBucket: 0, smallBucket: 0 }
-    let operation = [];
+   
+  let buckets = { bigBucket: 0, smallBucket: 0 }
+  let operation = [];
 
-    const lowerCapacity = Math.min(x, y);
-    const greaterCapacity = Math.max(x, y);
+  const lowerCapacity = Math.min(x, y);
+  const greaterCapacity = Math.max(x, y);
 
-    const mcd = (x, y) => {
+  const mcd = (x, y) => {
 
-      let value; 
-      while (y !== 0) {
-          value = y;
-          y = x % y;
-          x = value;
-      }
-      return x;
-    };
-  
-    function fillBucket (){
-      let fill = {}
-  
-      function big(min) {
-        let qty = min || greaterCapacity
-  
-          fill["fill"] = buckets.bigBucket = qty;
-          fill["bucket"] = "bigBucket";
-          fill["big"] = buckets.bigBucket;
-          fill["small"] = buckets.smallBucket;
-        };
-  
-      function small(min) {
-        let qty = min || lowerCapacity
-        
-        fill["fill"] = buckets.smallBucket = qty;
-        fill["bucket"] = "smallBucket";
+    let value; 
+    while (y !== 0) {
+        value = y;
+        y = x % y;
+        x = value;
+    }
+    return x;
+  };
+
+  function fillBucket (){
+    let fill = {}
+
+    function big(min) {
+      let qty = min || greaterCapacity
+
+        fill["fill"] = buckets.bigBucket = qty;
+        fill["bucket"] = "bigBucket";
         fill["big"] = buckets.bigBucket;
         fill["small"] = buckets.smallBucket;
-      }
-  
-      operation.push(fill);
-      return {
-        big,
-        small,
-      }      
-    };
-  
-    function emptyBucket() {     
-      let empty = {}
-  
-      function big() {
-          empty["empty"] = buckets.bigBucket = 0;
-          empty["bucket"] = "bigBucket";
-          empty["big"] = buckets.bigBucket;
-          empty["small"] = buckets.smallBucket;
-        };
-  
-      function small() {
-        empty["empty"] = buckets.smallBucket = 0;
-        empty["bucket"] = "smallBucket";
+      };
+
+    function small(min) {
+      let qty = min || lowerCapacity
+      
+      fill["fill"] = buckets.smallBucket = qty;
+      fill["bucket"] = "smallBucket";
+      fill["big"] = buckets.bigBucket;
+      fill["small"] = buckets.smallBucket;
+    }
+
+    operation.push(fill);
+    return {
+      big,
+      small,
+    }      
+  };
+
+  function emptyBucket() {     
+    let empty = {}
+
+    function big() {
+        empty["empty"] = buckets.bigBucket = 0;
+        empty["bucket"] = "bigBucket";
         empty["big"] = buckets.bigBucket;
         empty["small"] = buckets.smallBucket;
-      }
-  
-      operation.push(empty);
+      };
 
-      return {
-        big,
-        small,
-      }   
-    };
-  
-    function transferBucket(){
-      let transfer = {}; 
-  
-      function bigToSmall() {
-        let capacity = 0;
-  
-        if (buckets.bigBucket > lowerCapacity && !buckets.smallBucket) {
-          capacity = lowerCapacity;
-          buckets.smallBucket = capacity
-        } else if (buckets.bigBucket && buckets.smallBucket) {
-          capacity = lowerCapacity - buckets.smallBucket;
-          buckets.smallBucket = buckets.smallBucket + capacity
-        } else if (buckets.bigBucket && !buckets.smallBucket) {
-          capacity = buckets.bigBucket - buckets.smallBucket;
-          buckets.smallBucket = buckets.smallBucket + capacity
-        }
-  
-        transfer["transfer"] = capacity;
-        buckets.bigBucket = buckets.bigBucket - capacity;
-        transfer["bucket"] = "bigToSmall";
-        transfer["big"] = buckets.bigBucket;
-        transfer["small"] = buckets.smallBucket;
-      }
-  
-      function smallToBig() {
-        let capacity = 0;
-  
-        if (buckets.smallBucket > greaterCapacity && !buckets.bigBucket) {
-          capacity = lowerCapacity;
-          buckets.bigBucket = capacity;
-        }else if(buckets.bigBucket && buckets.smallBucket) {
-          capacity = greaterCapacity - buckets.bigBucket;
-          buckets.bigBucket = buckets.bigBucket + capacity
-        } else if(buckets.smallBucket && !buckets.bigBucket) {
-          capacity = buckets.smallBucket;
-          buckets.bigBucket = buckets.bigBucket + capacity
-        } 
-  
-        transfer["transfer"] = capacity;
-        buckets.smallBucket = buckets.smallBucket - capacity;
-        transfer["bucket"] = "smallToBig";
-        transfer["big"] = buckets.bigBucket;
-        transfer["small"] = buckets.smallBucket;
-      }
-  
-      operation.push(transfer);
-  
-      return {
-        bigToSmall,
-        smallToBig,
-       }
-
-
-
-
+    function small() {
+      empty["empty"] = buckets.smallBucket = 0;
+      empty["bucket"] = "smallBucket";
+      empty["big"] = buckets.bigBucket;
+      empty["small"] = buckets.smallBucket;
     }
-  
-  
-    function from() {
-    
-      function bigToSmall(){
-    
-        do {
-          if (buckets.bigBucket === amountWasted || buckets.smallBucket === amountWasted) break;
-          !buckets.bigBucket && fillBucket().big();
-          if (buckets.bigBucket === amountWasted || buckets.smallBucket === amountWasted) break;
-          buckets.bigBucket && transferBucket().bigToSmall();
-          if (buckets.bigBucket === amountWasted || buckets.smallBucket === amountWasted) break;
-          buckets.bigBucket && emptyBucket().small();
-        } while (buckets.smallBucket <= amountWasted);
-        
-      }
-    
-      function smallToBig() {
-  
-        do {
-          if (buckets.bigBucket === amountWasted || buckets.smallBucket === amountWasted) break;
-          !buckets.smallBucket && fillBucket().small();
-          if (buckets.bigBucket === amountWasted || buckets.smallBucket === amountWasted) break;
-          buckets.smallBucket && transferBucket().smallToBig();
-          if (buckets.bigBucket === amountWasted || buckets.smallBucket === amountWasted) break;
-          buckets.smallBucket && emptyBucket().big();
-        } while (buckets.smallBucket <= amountWasted);
-    
-      }
-    
-      return {
-        bigToSmall,
-        smallToBig,
-      }
-    }
-  
-  if((amountWasted <= greaterCapacity)){  
 
-    if((greaterCapacity === amountWasted) || (lowerCapacity === amountWasted)){
-  
-      if (lowerCapacity === amountWasted){ 
-  
-        fillBucket().small()
-  
-    } else {
-  
-        fillBucket().big()
-  
+    operation.push(empty);
+
+    return {
+      big,
+      small,
+    }   
+  };
+
+  function transferBucket(){
+    let transfer = {}; 
+
+    function bigToSmall() {
+      let capacity = 0;
+
+      if (buckets.bigBucket > lowerCapacity && !buckets.smallBucket) {
+        capacity = lowerCapacity;
+        buckets.smallBucket = capacity
+      } else if (buckets.bigBucket && buckets.smallBucket) {
+        capacity = lowerCapacity - buckets.smallBucket;
+        buckets.smallBucket = buckets.smallBucket + capacity
+      } else if (buckets.bigBucket && !buckets.smallBucket) {
+        capacity = buckets.bigBucket - buckets.smallBucket;
+        buckets.smallBucket = buckets.smallBucket + capacity
       }
-  
-      } else {      
-  
-      return setError("without solution in process...")
-  
-    } 
-        
+
+      transfer["transfer"] = capacity;
+      buckets.bigBucket = buckets.bigBucket - capacity;
+      transfer["bucket"] = "bigToSmall";
+      transfer["big"] = buckets.bigBucket;
+      transfer["small"] = buckets.smallBucket;
+    }
+
+    function smallToBig() {
+      let capacity = 0;
+
+      if (buckets.smallBucket > greaterCapacity && !buckets.bigBucket) {
+        capacity = lowerCapacity;
+        buckets.bigBucket = capacity;
+      }else if(buckets.bigBucket && buckets.smallBucket) {
+
+        if(buckets.bigBucket) {
+          capacity = (greaterCapacity - buckets.bigBucket) > lowerCapacity ? buckets.smallBucket : (greaterCapacity - buckets.bigBucket)    
         } else {
-  
-    return setError("without solution")
-  
+          capacity = greaterCapacity - buckets.bigBucket;
+        }
+        buckets.bigBucket = buckets.bigBucket + capacity;
+      } else if(buckets.smallBucket && !buckets.bigBucket) {
+        capacity = buckets.smallBucket;
+        buckets.bigBucket = buckets.bigBucket + capacity
+      } 
+
+      transfer["transfer"] = capacity;
+      buckets.smallBucket = buckets.smallBucket - capacity;
+      transfer["bucket"] = "smallToBig";
+      transfer["big"] = buckets.bigBucket;
+      transfer["small"] = buckets.smallBucket;
     }
 
-  setSolutions([operation, data]);
-  
+    operation.push(transfer);
+
+    return {
+      bigToSmall,
+      smallToBig,
+     }
   }
+
+
+  function from() {
+  
+    function bigToSmall(){
+  
+      do {
+        if (buckets.bigBucket === amountWasted || buckets.smallBucket === amountWasted) break;
+        !buckets.bigBucket && fillBucket().big();
+        if (buckets.bigBucket === amountWasted || buckets.smallBucket === amountWasted) break;
+        buckets.bigBucket && transferBucket().bigToSmall();
+        if (buckets.bigBucket === amountWasted || buckets.smallBucket === amountWasted) break;
+        buckets.bigBucket && emptyBucket().small();
+      } while ((buckets.smallBucket == amountWasted && buckets.smallBucket) <= amountWasted);
+      
+    }
+  
+    function smallToBig() {
+
+      do {
+        if (buckets.bigBucket === amountWasted || buckets.smallBucket === amountWasted) break;
+        !buckets.smallBucket && fillBucket().small();
+        if (buckets.bigBucket === amountWasted || buckets.smallBucket === amountWasted) break;
+        buckets.smallBucket && transferBucket().smallToBig();
+        if (buckets.bigBucket === amountWasted || buckets.smallBucket === amountWasted) break;
+        (buckets.bigBucket === greaterCapacity) && emptyBucket().big();
+      } while ((buckets.bigBucket == amountWasted && buckets.bigBucket) <= amountWasted);
+  
+    }
+  
+    return {
+      bigToSmall,
+      smallToBig,
+    }
+  }
+
+  if(amountWasted <= greaterCapacity){
+
+    if(mcd(greaterCapacity, lowerCapacity) === 1) {
+
+      switch (amountWasted) {
+        case lowerCapacity:
+          from().smallToBig()
+          break;
+
+        case greaterCapacity:
+          from().bigToSmall()
+          break;
+      
+        default:
+          (greaterCapacity % 2 === 0 || lowerCapacity% 2 === 0) ? from().smallToBig() : from().bigToSmall();
+          break;
+      }
+
+    } else {
+
+      if((mcd(greaterCapacity, lowerCapacity) === 2) && amountWasted >= 2) {
+        from().smallToBig()
+      } else {
+
+        if(mcd(greaterCapacity, lowerCapacity) > 2){
+
+          if(amountWasted % mcd(greaterCapacity, lowerCapacity) === 0){
+            from().smallToBig()
+          } else {
+            setError("without solution")
+          }
+          
+        } else {
+          setError("without solution")
+        }
+      }
+    }
+
+  } else {
+    setError("without solution")
+  }
+
+    setSolutions([operation, data])
+  }    
 
   const catchError = (err) => {
     setError(err)

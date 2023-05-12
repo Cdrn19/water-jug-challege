@@ -17,3 +17,16 @@
   width: 50px;
   text-align: center;
 }
+
+.explanationCard__solved {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  background-color: green;
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  padding: 15px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
