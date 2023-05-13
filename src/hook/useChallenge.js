@@ -230,12 +230,31 @@ function useProvideChallenge() {
             break;
         }
       } else {
-        if (mcd(greaterCapacity, lowerCapacity) === 2 && amountWasted >= 2) {
-          from().smallToBig();
+        if (
+          mcd(greaterCapacity, lowerCapacity) === 2 &&
+          amountWasted % 2 == 0
+        ) {
+          switch (amountWasted) {
+            case greaterCapacity:
+              from().bigToSmall();
+              break;
+
+            default:
+              from().smallToBig();
+              break;
+          }
         } else {
           if (mcd(greaterCapacity, lowerCapacity) > 2) {
             if (amountWasted % mcd(greaterCapacity, lowerCapacity) === 0) {
-              from().smallToBig();
+              switch (amountWasted) {
+                case greaterCapacity:
+                  from().bigToSmall();
+                  break;
+
+                default:
+                  from().smallToBig();
+                  break;
+              }
             } else {
               setError("without solution");
             }
